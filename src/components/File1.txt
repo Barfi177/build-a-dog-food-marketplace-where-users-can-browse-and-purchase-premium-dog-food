@@ -1,0 +1,35 @@
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+async function main() {
+  await prisma.product.createMany({
+    data: [
+      {
+        name: "Wild Salmon Premium",
+        slug: "wild-salmon-premium",
+        description: "High-protein, grain-free formula with wild-caught salmon.",
+        priceCents: 4999,
+        imageUrl: "/images/salmon.jpg"
+      },
+      {
+        name: "Lamb & Oats Sensitive",
+        slug: "lamb-oats-sensitive",
+        description: "Gentle on stomachs, limited ingredients.",
+        priceCents: 4299,
+        imageUrl: "/images/lamb.jpg"
+      },
+      {
+        name: "Puppy Growth Mix",
+        slug: "puppy-growth-mix",
+        description: "Nutrient-packed formula for growing pups.",
+        priceCents: 4599,
+        imageUrl: "/images/puppy.jpg"
+      }
+    ]
+  });
+}
+main()
+  .catch((e) => console.error(e))
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
