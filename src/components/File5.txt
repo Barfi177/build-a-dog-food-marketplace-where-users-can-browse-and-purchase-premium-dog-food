@@ -1,0 +1,28 @@
+import { PrismaClient } from "@prisma/client";
+import ProductCard from "../components/ProductCard";
+import { CartProvider, useCart } from "../context/CartContext";
+import { checkout } from "../hooks/useCheckout";
+
+export default async function Home() {
+  const prisma = new PrismaClient();
+  const products = await prisma.product.findMany();
+
+  return (
+    <CartProvider>
+      <main className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold mb-4">Premium Dog Food Marketplace</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {products.map((p) => (
+            <ProductCardWrapper key={p.id} product={p} />
+          ))}
+        </div>
+      </main>
+    </CartProvider>
+  );
+}
+
+// wrapper to allow client cart usage
+function ProductCardWrapper({ product }: any) {
+  const { add } = useCart();
+  return <ProductCard product={product} onAdd={(p: any) => add({ productId: p.id, name: p.name, quantity: 1, unit_cents: p.priceCents })} />;
+}
